@@ -4,7 +4,7 @@ import socket
 import threading
 
 class Client(object):
-    def __init__(self,serverHost='10.1.102.157',serverPort=6666):
+    def __init__(self,serverHost,serverPort):
         self.__clientHost = socket.gethostbyname(socket.gethostname())
         self.clientPort = None
         self.serverHost = serverHost
@@ -50,4 +50,6 @@ class Client(object):
                     print recvData
 
 if __name__ == "__main__":
-    Client().run()
+    serverHost = raw_input("connect server:")
+    serverPort = int(raw_input("connect port:"))
+    Client(serverHost=serverHost,serverPort=serverPort).run()
