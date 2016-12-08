@@ -1,13 +1,14 @@
+#!/bin/env python
 #coding:utf-8
 import socket
 import threading
 sendMsgLock = threading.Semaphore(value=1)
 
 class Server(object):
-    def __init__(self,invCode):
-        self.__serverHost = '10.1.102.157'
-        self.__serverPort = 6666
-        self.conns  = 5
+    def __init__(self,serverPort=6666,connsNum=5,invCode='zzzz'):
+        self.__serverHost = '127.0.0.1'
+        self.__serverPort = serverPort
+        self.connsNum  = connsNum
         self.whiteIps = []
         self.blockIps = []
         self.__msgQueue = []
@@ -17,7 +18,7 @@ class Server(object):
     def run(self):
         sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         sock.bind((self.__serverHost,self.__serverPort))
-        sock.listen(self.conns)
+        sock.listen(self.connsNum)
         print "[init]server startup"
         threading.Thread(target=self.sendMsg).start()
         while True:
@@ -82,5 +83,7 @@ class Server(object):
         print "alive connection(%s):%s"%(len(self.__aliveConns.keys()),self.__aliveConns.keys())
 
 if __name__ == "__main__":
+    serverPort = int(raw_input("setup server listen port:"))
+    connsNum = int(raw_input("setup server max keepalive:"))
     invCode = raw_input("setup server invcode:")
-    Server(invCode).run()
+    Server(serverPort,connsNum,invCode).run()
